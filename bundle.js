@@ -45,7 +45,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Game = __webpack_require__(1);
-	var GameView = __webpack_require__(5);
+	var GameView = __webpack_require__(6);
 
 	var element = document.getElementById("game-canvas");
 	var ctx = element.getContext("2d");
@@ -60,7 +60,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Asteroid = __webpack_require__(2);
-	var Ship = __webpack_require__(6);
+	var Ship = __webpack_require__(5);
 
 	var Game = function(){
 	  this.addAsteroids(Game.NUM_ASTEROIDS);
@@ -69,9 +69,9 @@
 
 	Game.DIM_X = 800;
 	Game.DIM_Y = 800;
-	Game.NUM_ASTEROIDS = 200;
+	Game.NUM_ASTEROIDS = 20;
 
-	Game.randoPo = function () {
+	Game.prototype.randoPo = function () {
 	  var x = Math.floor(Math.random() * Game.DIM_X);
 	  var y = Math.floor(Math.random() * Game.DIM_Y);
 	  return [x, y];
@@ -79,16 +79,19 @@
 
 	Game.prototype.allObjects = function () {
 	  var allObjs = this.asteroids.slice();
-	  return allObjs.push(this.ship);
+	  allObjs.push(this.ship);
+	  return allObjs;
 	};
 
 	Game.prototype.checkCollisions = function () {
 	  var that = this;
-	  this.allObjects().forEach(function(spacejunk){
+	  that.allObjects().forEach(function(spaceJunk){
 	    for (var i = 0; i < that.allObjects().length - 1; i++){
-	      if (spacejunk.isCollidedWith(that.allObjects()[i]) &&
-	          spacejunk !== that.allObjects()[i]){
-	        spacejunk.collideWith(that.allObjects()[i]);
+	      var otherJunk = that.allObjects()[i];
+	      if (spaceJunk.isCollidedWith(otherJunk) &&
+	          spaceJunk !== otherJunk){
+	        spaceJunk.collideWith(otherJunk);
+	        otherJunk.collideWith(spaceJunk);
 	      }
 	    }
 	  });
@@ -127,7 +130,7 @@
 	  this.asteroids = [];
 	  var that = this;
 	  while (this.asteroids.length < num){
-	    this.asteroids.push(new Asteroid(that, Game.randoPo()));
+	    this.asteroids.push(new Asteroid(that, that.randoPo()));
 	  }
 	  return this.asteroids;
 	};
@@ -137,15 +140,15 @@
 	  ctx.clearRect(0, 0, 800, 800);
 	  ctx.fillStyle = "#000000";
 	  ctx.fillRect(0,0,800,800);
-	  this.allObjects().forEach(function(spacejunk){
-	    spacejunk.draw(ctx);
+	  this.allObjects().forEach(function(spaceJunk){
+	    spaceJunk.draw(ctx);
 	  });
 
 	};
 
 	Game.prototype.moveObjects = function () {
-	  this.allObjects().forEach(function(spacejunk){
-	    spacejunk.move();
+	  this.allObjects().forEach(function(spaceJunk){
+	    spaceJunk.move();
 	  });
 	};
 
@@ -158,11 +161,11 @@
 
 	var Util = __webpack_require__(3);
 	var MovingObject = __webpack_require__(4);
-	var Ship = __webpack_require__(6);
+	var Ship = __webpack_require__(5);
 
 	var Asteroid = function(game, position){
 	  this.COLOR = "#ff0000";
-	  this.RADIUS = 10;
+	  this.RADIUS = Math.floor((Math.random() * 30) + 5);
 	  var vel = Util.randomVec(8);
 	  MovingObject.call(this, {"game": game,
 	                    "pos": position,
@@ -180,10 +183,6 @@
 	    otherObject.relocate();
 	    this.game.remove(this);
 	  }
-	  else{
-	  this.game.remove(otherObject);
-	  this.game.remove(this);
-	}
 	};
 
 
@@ -270,6 +269,38 @@
 
 	var Util = __webpack_require__(3);
 	var MovingObject = __webpack_require__(4);
+
+	var Ship = function(game){
+	  this.RADIUS = 10;
+	  this.COLOR = "#0000FF";
+	  MovingObject.call(this, {"game": game,
+	                    "pos": [400,400],
+	                    "vel": [0,0],
+	                    radius: this.RADIUS,
+	                    color: this.COLOR});
+	};
+
+	Util.inherits(Ship, MovingObject);
+
+	Ship.prototype.relocate = function () {
+	  this.pos = this.game.randoPo();
+	  this.vel = [0, 0];
+	};
+
+	Ship.prototype.power = function (impulse) {
+	  this.vel[0] += impulse;
+	  this.vel[1] += impulse;
+	};
+
+	module.exports = Ship;
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Util = __webpack_require__(3);
+	var MovingObject = __webpack_require__(4);
 	var Asteroid = __webpack_require__(2);
 	var Game = __webpack_require__(1);
 
@@ -288,35 +319,6 @@
 
 
 	module.exports = GameView;
-
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Util = __webpack_require__(3);
-	var MovingObject = __webpack_require__(4);
-
-	var Ship = function(game){
-	  this.RADIUS = 20;
-	  this.COLOR = "#0000FF";
-	  MovingObject.call(this, {"game": game,
-	                    "pos": [400,400],
-	                    "vel": [0,0],
-	                    radius: this.RADIUS,
-	                    color: this.COLOR});
-	};
-
-
-	Ship.prototype.relocate = function () {
-	  this.pos = [400, 400];
-	  this.vel = [0, 0];
-	};
-
-	Util.inherits(Ship, MovingObject);
-
-
-	module.exports = Ship;
 
 
 /***/ }
