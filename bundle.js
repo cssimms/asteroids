@@ -317,7 +317,9 @@
 	  }, 20);
 	};
 
-
+	GameView.prototype.bindKeyHandlers = function () {
+	  key('up', this.game.ship.power());
+	};
 	module.exports = GameView;
 
 
