@@ -1,5 +1,5 @@
 module.exports = {
-  entry: "./lib/asteroids.js",
+  entry: "./app.js",
   mode: "development",
   output: {
     path: `${__dirname}`,
