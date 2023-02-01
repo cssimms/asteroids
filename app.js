@@ -3,7 +3,7 @@ var Game = require("./lib/game.js");
 var GameView = require("./lib/gameView.js");
 
 console.log("~~ Initializing Asteroids ~~");
-var gameContainer = document.getElementById("asteroids-container");
+var gameContainer = document.getElementById("asteroids-runner");
 // var element = document.getElementById("game-canvas");
 var canvasElement = document.createElement("canvas");
 canvasElement.id = "game-canvas";
