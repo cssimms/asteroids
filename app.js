@@ -2,6 +2,7 @@ var CONSTANTS = require("./lib/constants.js");
 var Game = require("./lib/game.js");
 var GameView = require("./lib/gameView.js");
 
+console.log("~~ Initializing Asteroids ~~");
 var gameContainer = document.getElementById("asteroids-container");
 // var element = document.getElementById("game-canvas");
 var canvasElement = document.createElement("canvas");
@@ -23,6 +24,7 @@ startButton.innerText = "Start Asteroids!";
 gameContainer.appendChild(startButton);
 
 startButton.addEventListener("click", (event) => {
+  console.log("-- Asteroids Button clicked! --");
   if (gameRunning) {
     gameRunning = false;
     newGameView.stop();
