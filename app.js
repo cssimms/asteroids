@@ -8,20 +8,28 @@ var canvasElement = document.createElement("canvas");
 canvasElement.id = "game-canvas";
 canvasElement.width = CONSTANTS.DEFAULT_GAME_WIDTH;
 canvasElement.height = CONSTANTS.DEFAULT_GAME_HEIGHT;
-var startButton = document.createElement("button");
-startButton.id = "start-button";
-startButton.innerText = "Start Asteroids!";
 
 gameContainer.appendChild(canvasElement);
-gameContainer.appendChild(startButton);
 var ctx = canvasElement.getContext("2d");
 
 var newGame = new Game();
 var newGameView = new GameView(newGame, ctx);
 
-// remove later
-newGameView.start();
+// On/Off functionality
+var gameRunning = false;
+var startButton = document.createElement("button");
+startButton.id = "start-button";
+startButton.innerText = "Start Asteroids!";
+gameContainer.appendChild(startButton);
+
 startButton.addEventListener("click", (event) => {
-  console.log("Starting Asteroids...");
-  newGameView.start();
+  if (gameRunning) {
+    gameRunning = false;
+    newGameView.stop();
+    startButton.innerText = "Start Asteroids!";
+  } else {
+    gameRunning = true;
+    newGameView.start();
+    startButton.innerText = "Stop Asteroids...";
+  }
 });
