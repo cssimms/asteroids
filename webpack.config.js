@@ -16,5 +16,11 @@ module.exports = {
       directory: path.join(__dirname, "/dist"),
     },
     port: 9000,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET",
+      "Access-Control-Allow-Headers":
+        "X-Requested-With, content-type, Authorization",
+    },
   },
 };
